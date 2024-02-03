@@ -309,8 +309,9 @@ report_mouse_t pimoroni_trackball_get_report(report_mouse_t mouse_report) {
                 if (!debounce) {
                     x_offset += pimoroni_trackball_get_offsets(pimoroni_data.right, pimoroni_data.left, PIMORONI_TRACKBALL_SCALE);
                     y_offset += pimoroni_trackball_get_offsets(pimoroni_data.down, pimoroni_data.up, PIMORONI_TRACKBALL_SCALE);
-                    mouse_report.x = pimoroni_trackball_adapt_values(&x_offset);
-                    mouse_report.y = pimoroni_trackball_adapt_values(&y_offset);
+                    // rotate 270
+                    mouse_report.x = pimoroni_trackball_adapt_values(&y_offset);
+                    mouse_report.y = -pimoroni_trackball_adapt_values(&x_offset);
                 } else {
                     debounce--;
                 }
