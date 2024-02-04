@@ -2,6 +2,43 @@
 #include "version.h"
 #define MOON_LED_LEVEL LED_LEVEL
 
+#include "print.h"
+#include "report.h"
+#include "i2c_master.h"
+
+#ifdef CONSOLE_ENABLE
+enum i2c_keycodes {
+  SCAN = SAFE_RANGE,
+};
+#endif
+
+#ifdef CONSOLE_ENABLE
+bool i2c_scan(keyrecord_t *record) {
+    if (!record->event.pressed) {
+        return true;
+    }
+    uint8_t mouse_data = 0;
+    for(uint8_t address = 1; address < 127; address++ ) {
+        i2c_status_t status = i2c_receive(address << 1, &mouse_data, sizeof(mouse_data), 1000);
+        if (status == I2C_STATUS_SUCCESS) {
+            xprintf("received: %02x: %d\n", address, mouse_data);
+        }
+    }
+    return false;
+}
+#endif
+
+bool process_record_user_extra(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+#ifdef CONSOLE_ENABLE
+    case SCAN:
+      return i2c_scan(record);
+#endif
+  }
+  return true;
+}
+
+
 enum custom_keycodes {
   RGB_SLD = ML_SAFE_RANGE,
   HSV_0_245_245,
