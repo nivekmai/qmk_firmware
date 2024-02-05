@@ -1,3 +1,56 @@
+# Moonrover MK1(r2)
+
+<img src="https://github.com/nivekmai/qmk_firmware/assets/1008043/fad5d58f-a6a2-4e84-833f-6648be2c4cbb" width="400" />
+
+## Revision 2 of Moonrover Mark 1
+
+This setup adds a [Pimoroni trackball](https://shop.pimoroni.com/products/trackball-breakout?variant=27672765038675) to the [ZSA Moonlander](https://www.zsa.io/moonlander/). The trackball is connected via I<sup>2</sup>C breakout that ZSA exposed over the ribbon cable to attach the thumb cluster (designed with replacing the right thumb in mind).
+
+> [!NOTE]
+> This setup isn't ideal (the pimoroni trackball is not good enough to be a mouse replacement), and therefore I'm moving onto a better trackball setup in my [MK2](https://github.com/nivekmai/qmk_firmware/tree/i2c-arduino-trackball) branch. I recommend checking that out for a proper trackball setup for the Moonlander.
+
+The benefits of the MK1 setup is that it's relatively straightforward to build.
+
+## BOM
+
+- [ZSA Moonlander](https://www.zsa.io/moonlander/)
+- [Pimoroni trackball](https://shop.pimoroni.com/products/trackball-breakout?variant=27672765038675)
+- (recommended) FPC 16P 0.5mm pitch ribbon cable beakout (I used [this one](https://www.amazon.com/dp/B0CLYBRHXD?psc=1&ref=ppx_yo2ov_dt_b_product_details))
+- FPC 16P 0.5mm pitch ribbon cable
+  - The one that came with the moonlander is probably too short when connecting to a breakout board
+  - I used [this one](https://www.amazon.com/dp/B09R8X99HL?psc=1&ref=ppx_yo2ov_dt_b_product_details) 
+
+## Wiring
+
+Connect via the ribbon cable that's normally used to connect the right thumb cluster:
+
+<img src="https://github.com/nivekmai/qmk_firmware/assets/1008043/458c08e5-850f-483c-8d06-5a1924142ea2" width="400" />
+
+<table>
+    <tr>
+        <td>Moonlander</td>    <td>Pimoroni trackball</td>
+    </tr><tr>
+        <td>1</td>             <td>GND</td>
+    </tr><tr>
+        <td>9</td>             <td>SCL</td>
+    </tr><tr>
+        <td>10</td>            <td>SDA</td>
+    </tr><tr>
+        <td>16</td>            <td>3-5V</td>
+    </tr><tr>
+        <td>None</td>          <td>INT</td>
+    </tr>
+</table>
+
+> [!CAUTION]
+> If you use a B type cable like I did, make sure you reverse the pins from the ribbon cables. On the breakout board I used, the opposite side has reversed pins which made things easier.
+
+## Hardware
+
+Model available on [printables](https://www.printables.com/model/751773-moonrover-mk1).
+
+----
+
 # ZSA's fork of QMK Firmware
 
 [![Current Version](https://img.shields.io/github/tag/zsa/qmk_firmware.svg)](https://github.com/zsa/qmk_firmware/tags)
@@ -18,6 +71,9 @@ You can request changes by making a fork and opening a [pull request](https://gi
 
 ## Supported Keyboards
 
+> [!NOTE]
+> The pimoroni trackball setup is only tested on the moonlander, but QMK natively supports the trackball so installing it on any other ZSA keyboard shouldn't be too complicated.
+
 * [ErgoDox EZ](/keyboards/ergodox_ez/)
 * [Planck EZ](/keyboards/planck/ez)
 * [Moonlander Mark I](/keyboards/moonlander)
@@ -28,7 +84,7 @@ To set up the local build enviroment to create the firmware image manually, head
 And instead of using just `qmk setup`, you will want to run this instead:
 
 ```sh
-qmk setup zsa/qmk_firmware -b firmware23
+qmk setup nivekmai/qmk_firmware -b pimoroni
 ```
 
 ## Maintainers
@@ -37,40 +93,4 @@ QMK is developed and maintained by Jack Humbert of OLKB with contributions from 
 
 # Update Process
 
-1. Check out branch from ZSA's master branch:
-    1. `git remote add zsa https://github.com/zsa/qmk_firmware.git`
-    2. `git fetch --all`
-    3. `git checkout -B branchname zsa/master`
-    4. `git push -u zsa branchname`
-2. Check for core changes:
-    - [https://github.com/qmk/qmk_firmware/commits/master/quantum](https://github.com/qmk/qmk_firmware/commits/master/quantum)
-    - [https://github.com/qmk/qmk_firmware/commits/master/tmk_core](https://github.com/qmk/qmk_firmware/commits/master/tmk_core)
-    - [https://github.com/qmk/qmk_firmware/commits/master/util](https://github.com/qmk/qmk_firmware/commits/master/util)
-    - [https://github.com/qmk/qmk_firmware/commits/master/drivers](https://github.com/qmk/qmk_firmware/commits/master/drivers)
-    - [https://github.com/qmk/qmk_firmware/commits/master/lib](https://github.com/qmk/qmk_firmware/commits/master/lib)
-    - These folders are the important ones for maintaining the repo and keeping it properly up to date. Most, but not all, changes on this list should be pulled into our repo.
-4. `git merge (hash|tag)`
-    - `git rm -rf docs users layouts .vscode` to remove the docs and user code that we don't want.
-    - To remove all of the keyboard exept the ones we want:
-      ```sh
-      find ./keyboards -mindepth 1 -maxdepth 1 -type d -not -name ergodox_ez -not -name planck -not -name moonlander -not -name pytest -exec git rm -rf '{}' \;
-      find ./keyboards/planck -mindepth 1 -maxdepth 1 -type d -not -name ez -not -name base -not -name glow -not -name keymaps -exec git rm -rf '{}' \;
-      ```
-    - To remove all of the keymaps from folder that we don't want:
-      ```sh
-      find ./keyboards/ -mindepth 3 -maxdepth 3 -type d -not -name default -not -name oryx -not -name webusb -not -name glow -not -name reactive -not -name shine -not -name keymaps -not -name halfmoon -exec git rm -rf '{}' \;
-      ```
-    - Restore necessary files/folders:
-      ```sh
-      git checkout HEAD -- keyboards/handwired/pytest
-      git checkout HEAD -- layouts
-      ```
-    - Resolve merge conflicts, and commit.
-
-4. Commit update
-   * Include commit info in `[changelog.md](changelog.md)`
-5. Open Pull request, and include information about the commit
-
-## Strategy
-
-To keep PRs small and easier to test, they should ideally be 1:1 with commits from QMK Firmware master. They should only group commits if/when it makes sense. Such as multiple commits for a specific feature (split RGB support, for instance)
+This branch doesn't really introduce anything that should be merged into QMK (or the ZSA branch), so updates aren't expected.
