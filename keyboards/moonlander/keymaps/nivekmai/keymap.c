@@ -15,10 +15,8 @@ enum i2c_keycodes {
 #define I2C_TRACKBALL_ADDRESS 0x0A << 1
 
 typedef struct __attribute__((packed)) {
-    uint8_t up;
-    uint8_t down;
-    uint8_t left;
-    uint8_t right;
+    int16_t dx;
+    int16_t dy;
 } mouse_data_t;
 
 void pointing_device_driver_init(void) {
@@ -29,8 +27,8 @@ report_mouse_t pointing_device_driver_get_report(report_mouse_t mouse_report) {
     mouse_data_t mouse_data = {0};
     i2c_status_t status = i2c_receive(I2C_TRACKBALL_ADDRESS, (uint8_t*)&mouse_data, sizeof(mouse_data), 100);
     if (status == I2C_STATUS_SUCCESS) {
-        mouse_report.x = mouse_data.right - mouse_data.left;
-        mouse_report.y = mouse_data.up - mouse_data.down;
+        mouse_report.x = mouse_data.dx;
+        mouse_report.y = mouse_data.dy;
     }
     #ifdef CONSOLE_ENABLE
       xprintf("X: %d, Y: %d\n", mouse_report.x, mouse_report.y);

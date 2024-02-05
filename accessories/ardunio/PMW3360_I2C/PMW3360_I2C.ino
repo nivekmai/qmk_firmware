@@ -27,37 +27,28 @@
 // Enable basic debugging 
 //#define DEBUG
 // Enable verbose debugging (in case absolutely nothing seems to work)
-//#define DEBUG_V
+// #define DEBUG_V
 // Enable send debugging (in case you're struggling with data being sent)
 //#define DEBUG_S
 // Enable receive debugging (in case you're struggling with receiving data)
 //#define DEBUG_R
 // Enable mouse debugging (in case you're struggling with the trackball working)
+// note that this will stop from sending data over the I2C connection
 //#define DEBUG_M
 
-// Keep this in sync with the struct on the receiver side (e.g. QMMK)
+// Keep this in sync with the struct on the receiver side (e.g. QMK)
 typedef struct __attribute__((packed)) {
-    uint8_t up;
-    uint8_t down;
-    uint8_t left;
-    uint8_t right;
+    int16_t dx;
+    int16_t dy;
 } mouse_data_t;
 
 PMW3360 sensor;
 
-// Map data from 16 bit signed ints to the 8 bit unsigned ints for I2C transport
-mouse_data_t mapData(int16_t dx, int16_t dy) {
+// Map data from SPI data structure for I2C transport
+mouse_data_t mapData(PMW3360_DATA spiData) {
   mouse_data_t mouse_data = {0};
-  if (dx < 0) {
-    mouse_data.down = (uint8_t) abs(dx);
-  } else {
-    mouse_data.up = (uint8_t) dx;
-  }
-  if (dy < 0) {
-    mouse_data.left = (uint8_t) abs(dy);
-  } else {
-    mouse_data.right = (uint8_t) dy;
-  }
+  mouse_data.dx = spiData.dx;
+  mouse_data.dy = spiData.dy;
   return mouse_data;
 }
 
@@ -75,7 +66,7 @@ void requestEvent() {
       Serial.print("\tdy: ");
       Serial.println(data.dy);
     #endif
-    mouse_data_t mouse_data = mapData(data.dx, data.dy);
+    mouse_data_t mouse_data = mapData(data);
     #ifdef DEBUG_S
       Serial.print("up: ");
       Serial.print(mouse_data.up);
@@ -98,7 +89,7 @@ void requestEvent() {
 
 // Write mouse data to I2C bus
 void mouseWrite(mouse_data_t* data) {
-  Wire.write((uint8_t*)data, sizeof(data) * 2);
+  Wire.write((uint8_t*)data, sizeof(mouse_data_t));
 }
 
 
