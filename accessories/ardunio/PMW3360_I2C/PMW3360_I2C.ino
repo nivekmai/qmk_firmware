@@ -89,7 +89,7 @@ void requestEvent() {
 
 // Write mouse data to I2C bus
 void mouseWrite(mouse_data_t* data) {
-  Wire.write((uint8_t*)data, sizeof(mouse_data_t));
+  Wire.write((uint8_t*)data, sizeof(*data));
 }
 
 

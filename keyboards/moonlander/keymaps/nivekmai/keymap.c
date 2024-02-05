@@ -25,7 +25,7 @@ void pointing_device_driver_init(void) {
 
 report_mouse_t pointing_device_driver_get_report(report_mouse_t mouse_report) {
     mouse_data_t mouse_data = {0};
-    i2c_status_t status = i2c_receive(I2C_TRACKBALL_ADDRESS, (uint8_t*)&mouse_data, sizeof(mouse_data), 100);
+    i2c_status_t status = i2c_receive(I2C_TRACKBALL_ADDRESS, (uint8_t*)&mouse_data, sizeof(*&mouse_data), 100);
     if (status == I2C_STATUS_SUCCESS) {
         mouse_report.x = mouse_data.dx;
         mouse_report.y = mouse_data.dy;
