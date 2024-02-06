@@ -1,16 +1,15 @@
 #include QMK_KEYBOARD_H
 #include "version.h"
-#define MOON_LED_LEVEL LED_LEVEL
-
 #include "print.h"
 #include "report.h"
 #include "i2c_master.h"
 
-#ifdef CONSOLE_ENABLE
 enum i2c_keycodes {
+#ifdef CONSOLE_ENABLE
   SCAN = SAFE_RANGE,
-};
 #endif
+  MOUSE_SCROLL = SAFE_RANGE,
+};
 
 #define I2C_TRACKBALL_ADDRESS 0x0A << 1
 
@@ -23,12 +22,27 @@ void pointing_device_driver_init(void) {
     i2c_init();
 }
 
+bool set_scrolling = false;
+#define SCROLL_CHUNK 50;
+int scroll_comp_v = 0;
+int scroll_comp_h = 0;
+
+
 report_mouse_t pointing_device_driver_get_report(report_mouse_t mouse_report) {
     mouse_data_t mouse_data = {0};
     i2c_status_t status = i2c_receive(I2C_TRACKBALL_ADDRESS, (uint8_t*)&mouse_data, sizeof(*&mouse_data), 100);
     if (status == I2C_STATUS_SUCCESS) {
-        mouse_report.x = mouse_data.dx;
-        mouse_report.y = mouse_data.dy;
+        if (set_scrolling) {
+            scroll_comp_h -= mouse_data.dx;
+            mouse_report.h = scroll_comp_h/SCROLL_CHUNK;
+            scroll_comp_h = scroll_comp_h % SCROLL_CHUNK;
+            scroll_comp_v += mouse_data.dy;
+            mouse_report.v = scroll_comp_v/SCROLL_CHUNK;
+            scroll_comp_v = scroll_comp_v % SCROLL_CHUNK
+        } else {
+            mouse_report.x = -mouse_data.dx;
+            mouse_report.y = mouse_data.dy;
+        }
     }
     #ifdef CONSOLE_ENABLE
       xprintf("X: %d, Y: %d\n", mouse_report.x, mouse_report.y);
@@ -66,11 +80,23 @@ bool process_record_user_extra(uint16_t keycode, keyrecord_t *record) {
     case SCAN:
       return i2c_scan(record);
 #endif
+    case MOUSE_SCROLL:
+      if (record->event.pressed) {
+        set_scrolling = true;
+      } else {
+        set_scrolling = false;
+      }
+      return false;
   }
   return true;
 }
 
 
+// ============================ END OVERRIDES ==================================
+
+#include QMK_KEYBOARD_H
+#include "version.h"
+#define MOON_LED_LEVEL LED_LEVEL
 enum custom_keycodes {
   RGB_SLD = ML_SAFE_RANGE,
   HSV_0_245_245,
