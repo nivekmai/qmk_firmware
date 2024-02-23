@@ -8,20 +8,21 @@ The PMW3360 breakout board used was the JACK Enterprises PMW3360 Motion Sensor b
 
 ## Pin connections
 
-| Pro micro | Moonlander 			|
-|===========|=======================|
-| SDA (2) 	| SDA (ribbon cable 10) |
-| SCL (3) 	| SCL (ribbon cable 9) 	|
-| RAW 		| 5v (ribbon cable 16) 	|
-| GND		| gnd (ribbon cable 1) 	|
-
-| Pro micro | PMW3360 module		|
-|===========|=======================|
-| (NONE) 	| RS					|
-| GND		| GD					|
-| (NONE)	| MT					|
-| 10		| SS (Slave select)		|
-| 15		| SC (SPI Clock)		|
-| 16		| MO (MOSI)				|
-| 14		| MI (MISO)				|
-| VCC		| VI					|
+<table>
+    <tr><th>    Pro micro    </th><th>    Moonlander                </th></tr>
+    <tr><td>    SDA (2)      </td><td>    SDA (ribbon cable 10)     </td></tr>
+    <tr><td>    SCL (3)      </td><td>    SCL (ribbon cable 9)      </td></tr>
+    <tr><td>    RAW          </td><td>    5v (ribbon cable 16)      </td></tr>
+    <tr><td>    GND          </td><td>    gnd (ribbon cable 1)      </td></tr>
+</table>
+<table>
+    <tr><th>    Pro micro    </th><th>  PMW3360 module     </th></tr>
+    <tr><td>    (NONE)       </td><td>  RS                 </td></tr>
+    <tr><td>    GND          </td><td>  GD                 </td></tr>
+    <tr><td>    (NONE)       </td><td>  MT                 </td></tr>
+    <tr><td>    10           </td><td>  SS (Slave select)  </td></tr>
+    <tr><td>    15           </td><td>  SC (SPI Clock)     </td></tr>
+    <tr><td>    16           </td><td>  MO (MOSI)	       </td></tr>
+    <tr><td>    14           </td><td>  MI (MISO)          </td></tr>
+    <tr><td>    VCC          </td><td>  VI                 </td></tr>
+</table>
