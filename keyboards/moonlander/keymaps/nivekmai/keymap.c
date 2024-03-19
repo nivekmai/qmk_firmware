@@ -125,10 +125,10 @@ enum tap_dance_codes {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_moonlander(
     KC_EQUAL,       KC_1,           KC_2,           KC_3,           KC_4,           KC_5,           KC_LEFT,                                        KC_RIGHT,       KC_6,           KC_7,           KC_8,           KC_9,           KC_0,           KC_MINUS,       
-    KC_TAB,         KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,           KC_MS_BTN2,                                     TG(2),          KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_BSLS,        
+    KC_TAB,         KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,           KC_MS_BTN2,                                     KC_TRANSPARENT, KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_BSLS,        
     LT(1,KC_ESCAPE),MT(MOD_LGUI, KC_A),MT(MOD_LCTL, KC_S),MT(MOD_LSFT, KC_D),MT(MOD_LALT, KC_F),KC_G,           LGUI(LSFT(KC_SPACE)),                                                                MOUSE_SCROLL_V,         LT(2,KC_H),     MT(MOD_RALT, KC_J),MT(MOD_RSFT, KC_K),MT(MOD_RCTL, KC_L),TD(DANCE_0),    TD(DANCE_1),    
     KC_LEFT_SHIFT,  KC_Z,           KC_X,           KC_C,           KC_V,           KC_B,                                           KC_N,           KC_M,           KC_COMMA,       KC_DOT,         KC_SLASH,       KC_RIGHT_SHIFT, 
-    KC_LEFT_GUI,    MT(MOD_LCTL, KC_GRAVE),KC_LEFT_ALT,    KC_LEFT,        KC_RIGHT,       LGUI(KC_SPACE),                                                                                                 KC_TRANSPARENT, KC_UP,          KC_DOWN,        MT(MOD_RALT, KC_LBRC),MT(MOD_RCTL, KC_RBRC),KC_RIGHT_GUI,   
+    KC_LEFT_GUI,    MT(MOD_LCTL, KC_GRAVE),KC_LEFT_ALT,    KC_LEFT,        KC_RIGHT,       LGUI(KC_SPACE),                                                                                                 KC_TRANSPARENT, KC_MS_BTN1,     KC_MS_BTN2,     MT(MOD_RALT, KC_LBRC),MT(MOD_RCTL, KC_RBRC),KC_RIGHT_GUI,   
     KC_SPACE,       KC_BSPC,        KC_MS_BTN1,                     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
   ),
   [1] = LAYOUT_moonlander(
