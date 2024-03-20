@@ -1,3 +1,19 @@
+# Moonrover MK2 QMK fork
+This is a fork of the ZSA fork of QMK Firmware.
+
+Replaces the right thumb cluster with a trackball running a PMW3360 sensor on an arduino-based MCU. Connects to the keyboard directly via the original ribbon cable, no external wires to connect, and the keyboard (with trackball) is just as portable as the original keyboard.
+
+![image](https://github.com/nivekmai/qmk_firmware/assets/1008043/e52484b2-b58b-4cc2-8ec7-28c9f30fe073)
+
+Essential code is in 2 places: 
+- [Accessory code](accessories/ardunio/PMW3360_I2C)
+  - See the [README](accessories/ardunio/PMW3360_I2C/README.md) for details.
+- [Configuration code](keyboards/moonlander/keymaps/nivekmai/keymap.c)
+  - This repo currently contains a custom implementation of a drag scroll. You can ignore the `is_scrolling`* code to receive mouse movements from the accessory.
+  - See the [original docs](https://docs.qmk.fm/#/feature_pointing_device?id=custom-driver) for more information.
+ 
+See the [printables page](https://www.printables.com/model/776160-moonrover-mk2) for hardware instructions.
+
 # ZSA's fork of QMK Firmware
 
 [![Current Version](https://img.shields.io/github/tag/zsa/qmk_firmware.svg)](https://github.com/zsa/qmk_firmware/tags)
