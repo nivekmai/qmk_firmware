@@ -12,7 +12,7 @@ Essential code is in 2 places:
   - This repo currently contains a custom implementation of a drag scroll. You can ignore the `is_scrolling`* code to receive mouse movements from the accessory.
   - See the [original docs](https://docs.qmk.fm/#/feature_pointing_device?id=custom-driver) for more information.
  
-See the [printables page](https://www.printables.com/model/776160-moonrover-mk2) for hardware instructions.
+See the [printables page](https://www.printables.com/model/776160-moonrover-mk2) (or the [archived copy](printables.pdf) in this repo) for hardware instructions and models (also [archived copy in the accessories folder](accessories/ardunio/PMW3360_I2C/moonrover-mk2-model_files.zip))
 
 # ZSA's fork of QMK Firmware
 
