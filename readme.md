@@ -17,6 +17,12 @@ Essential code is in 2 places:
  
 See the [printables page](https://www.printables.com/model/776160-moonrover-mk2) (or the [archived copy](printables.pdf) in this repo) for hardware instructions and models (also [archived copy in the accessories folder](accessories/ardunio/PMW3360_I2C/moonrover-mk2-model_files.zip))
 
+## Working setup/installation (as of 11/25/2024)
+
+```qmk configure user.keyboard=zsa/moonlander user.keymap=nivekmai```
+```qmk compile```
+Use [QMK Toolbox](https://qmk.fm/toolbox) to flash to keyboard
+
 # ZSA's fork of QMK Firmware
 
 [![Current Version](https://img.shields.io/github/tag/zsa/qmk_firmware.svg)](https://github.com/zsa/qmk_firmware/tags)
