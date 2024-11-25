@@ -130,3 +130,5 @@ via*.json
 !/keyboards/zsa/**/keymaps/default/**
 !/keyboards/zsa/**/keymaps/oryx
 !/keyboards/zsa/**/keymaps/oryx/**
+!/keyboards/zsa/**/keymaps/nivekmai
+!/keyboards/zsa/**/keymaps/nivekmai/**
