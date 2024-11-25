@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Place your settings in this file to overwrite default and user settings.
 {
     // Unofficially, QMK uses spaces for indentation
@@ -18,7 +19,9 @@
         "xstddef": "c",
         "type_traits": "c",
         "utility": "c",
-        "ranges": "c"
+        "ranges": "c",
+        "version.h": "c",
+        "arduino_mouse.h": "c"
     },
     "[markdown]": {
         "editor.trimAutoWhitespace": false,
@@ -30,5 +33,6 @@
     },
     "clangd.arguments": [
         "--header-insertion=never"
-    ]
+    ],
+    "cmake.configureOnOpen": false
 }
