@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "version.h": "c",
+        "arduino_mouse.h": "c"
+    },
+    "cmake.configureOnOpen": false
+}
