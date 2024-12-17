@@ -5,10 +5,7 @@
 #include "i2c_master.h"
 
 enum i2c_keycodes {
-#ifdef CONSOLE_ENABLE
-  SCAN = SAFE_RANGE,
-#endif
-  MOUSE_SCROLL_V,
+  MOUSE_SCROLL_V = QK_USER_10,
   MOUSE_SCROLL_VH,
 };
 
@@ -28,46 +25,6 @@ bool is_scrolling_vh = false;
 #define SCROLL_CHUNK 50;
 int scroll_comp_v = 0;
 int scroll_comp_h = 0;
-
-
-uint8_t layers[3][3] = { {74,255,206}, {152,255,255}, {0,245,245} };
-uint8_t get_layer(void) {
-  return biton32(layer_state);
-}
-
-uint8_t get_next_layer(void) {
-  return get_layer() + 1 % 3;
-}
-
-void set_key_color(int key, uint8_t input[]){
-  HSV hsv = {
-      .h = input[0],
-      .s = input[1],
-      .v = input[2],
-    };
-  RGB rgb = hsv_to_rgb(hsv);
-  float f = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
-  rgb_matrix_set_color( key, f * rgb.r, f * rgb.g, f * rgb.b );   
-}
-
-
-// TODO: threading
-bool blink = false;
-void blink_key_color(int key) {
-  blink = true;
-  while(blink) {
-    xprintf("blink: %d, %d", key, get_layer());
-    set_key_color(key, layers[get_next_layer()]);
-    wait_ms(250);
-    set_key_color(key, layers[get_layer()]);
-    wait_ms(250);
-  }
-}
-
-void stop_blink(void) {
-  blink = false;
-}
-
 
 report_mouse_t pointing_device_driver_get_report(report_mouse_t mouse_report) {
     mouse_data_t mouse_data = {0};
@@ -93,7 +50,7 @@ report_mouse_t pointing_device_driver_get_report(report_mouse_t mouse_report) {
     return mouse_report;
 }
 
-uint16_t pointing_device_driver_get_cpi(void) { 
+uint16_t pointing_device_driver_get_cpi(void) {
     return 0;
 }
 
@@ -101,28 +58,8 @@ void pointing_device_driver_set_cpi(uint16_t cpi) {
 
 }
 
-#ifdef CONSOLE_ENABLE
-bool i2c_scan(keyrecord_t *record) {
-    if (!record->event.pressed) {
-        return true;
-    }
-    uint8_t mouse_data = 0;
-    for(uint8_t address = 1; address < 127; address++ ) {
-        i2c_status_t status = i2c_receive(address << 1, &mouse_data, sizeof(mouse_data), 1000);
-        if (status == I2C_STATUS_SUCCESS) {
-            xprintf("received: %02x: %d\n", address, mouse_data);
-        }
-    }
-    return false;
-}
-#endif
-
-bool process_record_user_extra(uint16_t keycode, keyrecord_t *record) {
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-#ifdef CONSOLE_ENABLE
-    case SCAN:
-      return i2c_scan(record);
-#endif
     case MOUSE_SCROLL_V:
       if (record->event.pressed) {
         is_scrolling_v = !is_scrolling_v;
@@ -139,6 +76,7 @@ bool process_record_user_extra(uint16_t keycode, keyrecord_t *record) {
 
 
 // ============================ END OVERRIDES ==================================
+
 #include QMK_KEYBOARD_H
 #include "version.h"
 #define MOON_LED_LEVEL LED_LEVEL
@@ -268,30 +206,6 @@ bool rgb_matrix_indicators_user(void) {
     if (rgb_matrix_get_flags() == LED_FLAG_NONE)
       rgb_matrix_set_color_all(0, 0, 0);
     break;
-  }
-  return true;
-}
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-
-    case RGB_SLD:
-        if (rawhid_state.rgb_control) {
-            return false;
-        }
-        if (record->event.pressed) {
-            rgblight_mode(1);
-        }
-        return false;
-    case HSV_0_245_245:
-        if (rawhid_state.rgb_control) {
-            return false;
-        }
-        if (record->event.pressed) {
-            rgblight_mode(1);
-            rgblight_sethsv(0,245,245);
-        }
-        return false;
   }
   return true;
 }

@@ -350,9 +350,6 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
     if (!process_record_user(keycode, record)) {
         return false;
     }
-    if (!process_record_user_extra(keycode, record)) {
-        return false;
-    }
     switch (keycode) {
 #if !defined(MOONLANDER_USER_LEDS)
         case LED_LEVEL:
