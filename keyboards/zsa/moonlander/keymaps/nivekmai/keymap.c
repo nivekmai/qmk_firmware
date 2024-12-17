@@ -22,6 +22,7 @@ void pointing_device_driver_init(void) {
 
 bool is_scrolling_v = false;
 bool is_scrolling_vh = false;
+bool is_hold_scrolling_v = false;
 #define SCROLL_CHUNK 50;
 int scroll_comp_v = 0;
 int scroll_comp_h = 0;
@@ -30,7 +31,7 @@ report_mouse_t pointing_device_driver_get_report(report_mouse_t mouse_report) {
     mouse_data_t mouse_data = {0};
     i2c_status_t status = i2c_receive(I2C_TRACKBALL_ADDRESS, (uint8_t*)&mouse_data, sizeof(*&mouse_data), 100);
     if (status == I2C_STATUS_SUCCESS) {
-        if (is_scrolling_v || is_scrolling_vh) {
+        if (is_scrolling_v || is_scrolling_vh || is_hold_scrolling_v) {
             if (is_scrolling_vh) {
                 scroll_comp_h -= mouse_data.dx;
                 mouse_report.h = scroll_comp_h/SCROLL_CHUNK;
@@ -68,6 +69,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case MOUSE_SCROLL_VH:
       if (record->event.pressed) {
         is_scrolling_vh = !is_scrolling_vh;
+      }
+      return false;
+    case MOUSE_SCROLL_V_HOLD:
+      if (record->event.pressed) {
+        is_hold_scrolling_v = true;
+      } else {
+        is_hold_scrolling_v = false;
       }
       return false;
   }
