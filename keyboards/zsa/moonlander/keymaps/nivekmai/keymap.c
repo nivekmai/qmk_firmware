@@ -102,12 +102,20 @@ int dead_zone(int val) {
 }
 
 
-void handle_j1y_scroll(moonrover_data moonrover_data, report_mouse_t *mouse_report) {
+void handle_joy_scroll(moonrover_data moonrover_data, report_mouse_t *mouse_report) {
     int moonroverJ1Y = dead_zone(get_8_bit_val(J1Y_MIN, J1Y_MAX, J1Y_RESTING, moonrover_data.j1y));
     if (moonroverJ1Y != 0) {
         scroll_comp_v -= moonroverJ1Y;
         mouse_report->v = scroll_comp_v / JOY_SCROLL_CHUNK;
         scroll_comp_v   = scroll_comp_v % JOY_SCROLL_CHUNK;
+    }
+    if (layer_state_is(1)) {
+        int moonroverJ1X = dead_zone(get_8_bit_val(J1X_MIN, J1X_MAX, J1X_RESTING, moonrover_data.j1x));
+        if (moonroverJ1X != 0) {
+            scroll_comp_h -= moonroverJ1X;
+            mouse_report->h = scroll_comp_h / JOY_SCROLL_CHUNK;
+            scroll_comp_h   = scroll_comp_h % JOY_SCROLL_CHUNK;
+        }
     }
 }
 
@@ -164,7 +172,7 @@ report_mouse_t pointing_device_driver_get_report(report_mouse_t mouse_report) {
     moonrover_data moonrover_data = {0};
     i2c_status_t   status         = i2c_receive(I2C_TRACKBALL_ADDRESS, (uint8_t *)&moonrover_data, sizeof(*&moonrover_data), 100);
     if (status == I2C_STATUS_SUCCESS) {
-        handle_j1y_scroll(moonrover_data, &mouse_report);
+        handle_joy_scroll(moonrover_data, &mouse_report);
         handle_mouse_scroll(moonrover_data, &mouse_report);
         update_joysticks(moonrover_data);
     }
