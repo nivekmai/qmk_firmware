@@ -1,21 +1,23 @@
-# Moonrover MK2 QMK fork
+# Moonrover MK3 QMK fork
 This is a fork of the ZSA fork of QMK Firmware.
 
-Replaces the right thumb cluster with a trackball running a PMW3360 sensor on an arduino-based MCU. Connects to the keyboard directly via the original ribbon cable, no external wires to connect, and the keyboard (with trackball) is just as portable as the original keyboard.
+Replaces the right thumb cluster with a trackball and 3 joysticks running a PMW3360 sensor on an arduino-based MCU. Connects to the keyboard directly via the original ribbon cable, no external wires to connect, and the keyboard (with trackball) is just as portable as the original keyboard.
 
-![image](https://github.com/nivekmai/qmk_firmware/assets/1008043/e52484b2-b58b-4cc2-8ec7-28c9f30fe073)
+![PXL_20250108_212238698 MP](https://github.com/user-attachments/assets/c34fe29c-d15c-4f9c-b7a1-b14c10abc23d)
 
 Essential code is in 2 places: 
 - [Accessory code](accessories/ardunio/PMW3360_I2C)
   - See the [README](accessories/ardunio/PMW3360_I2C/README.md) for details.
 - [Configuration code](keyboards/zsa/moonlander/keymaps/nivekmai/keymap.c)
   - This repo currently contains a custom implementation of a drag scroll. You can ignore the `is_scrolling` code to receive mouse movements from the accessory.
-  - config.h: can be completely copied from Oryx
-  - rules.mk: mostly copied from Oryx, need to add the pointer commands though
-  - keymap.c: where all the drag scroll code lives, can add the entire Oryx file after `END OVERRIDES`, `MOUSE_SCROLL_V` is the keycode to toggle drag scroll on/off (I like to put in KC_F24) and then just do a search/replace before flashing)
+  - config.h: Needs to have the updated joystick config, the moonrover mk3 hardware has 3 joysticks each pressable as a button
+  - rules.mk: mostly copied from Oryx, need to add the pointer and joystick configs though
+  - keymap.c: where all the drag scroll code lives, can add the entire Oryx file after `END OVERRIDES`, `MOUSE_SCROLL_V` is the keycode to toggle drag scroll on/off (I like to put in KC_F24) and use c macros to replace the keys)
   - See the [original docs](https://docs.qmk.fm/#/feature_pointing_device?id=custom-driver) for more information.
+
+You might also want my [fusion 360 add-in](https://github.com/nivekmai/Joystick-Control/tree/moonrover) if you are using this with Fusion 360 on Windows.
  
-See the [printables page](https://www.printables.com/model/776160-moonrover-mk2) (or the [archived copy](printables.pdf) in this repo) for hardware instructions and models (also [archived copy in the accessories folder](accessories/ardunio/PMW3360_I2C/moonrover-mk2-model_files.zip))
+See the [printables page](https://www.printables.com/model/1140396-moonrover-mk3) for hardware instructions and models
 
 ## Working setup/installation (as of 11/25/2024)
 - ```qmk configure user.keyboard=zsa/moonlander user.keymap=nivekmai```
