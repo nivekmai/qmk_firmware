@@ -1,64 +1,40 @@
 // Copyright 2023 Christopher Courtney, aka Drashna Jael're  (@drashna) <drashna@live.com>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include <stdint.h>
 #include "ergodox_ez.h"
 
-static uint8_t ergodox_right_led_1_duty;
-static uint8_t ergodox_right_led_2_duty;
-static uint8_t ergodox_right_led_3_duty;
-
 void ergodox_right_led_1_set(uint8_t n) {
-    ergodox_right_led_1_duty = n;
-    if (ergodox_right_led_1_duty == 0) {
-        ergodox_right_led_1_off();
-    } else {
-        ergodox_right_led_1_on();
-    }
+    OCR1A = n;
 }
-
-void ergodox_right_led_1_on(void) {
-    OCR1A = ergodox_right_led_1_duty;
-}
-
-void ergodox_right_led_1_off(void) {
-    OCR1A = 0;
-}
-
 void ergodox_right_led_2_set(uint8_t n) {
-    ergodox_right_led_2_duty = n;
-    if (ergodox_right_led_2_duty == 0) {
-        ergodox_right_led_2_off();
-    } else {
-        ergodox_right_led_2_on();
-    }
+    OCR1B = n;
 }
-
-void ergodox_right_led_2_on(void) {
-    OCR1B = ergodox_right_led_2_duty;
-}
-
-void ergodox_right_led_2_off(void) {
-    OCR1B = 0;
-}
-
 void ergodox_right_led_3_set(uint8_t n) {
-    ergodox_right_led_3_duty = n;
-    if (ergodox_right_led_3_duty == 0) {
-        ergodox_right_led_3_off();
-    } else {
-        ergodox_right_led_3_on();
-    }
+    OCR1C = n;
 }
 
-void ergodox_right_led_3_off(void) {
-    OCR1C = 0;
+__attribute__((weak)) void ergodox_right_led_1_on(void) {
+    gpio_write_pin_high(ERGODOX_LED_1_PIN);
 }
 
-void ergodox_right_led_3_on(void) {
-    OCR1C = ergodox_right_led_3_duty;
+__attribute__((weak)) void ergodox_right_led_2_on(void) {
+    gpio_write_pin_high(ERGODOX_LED_2_PIN);
 }
 
+__attribute__((weak)) void ergodox_right_led_3_on(void) {
+    gpio_write_pin_high(ERGODOX_LED_3_PIN);
+}
+__attribute__((weak)) void ergodox_right_led_1_off(void) {
+    gpio_write_pin_low(ERGODOX_LED_1_PIN);
+}
+
+__attribute__((weak)) void ergodox_right_led_2_off(void) {
+    gpio_write_pin_low(ERGODOX_LED_2_PIN);
+}
+
+__attribute__((weak)) void ergodox_right_led_3_off(void) {
+    gpio_write_pin_low(ERGODOX_LED_3_PIN);
+}
 
 void keyboard_post_init_sub(void) {
     // keyboard LEDs (see "PWM on ports OC1(A|B|C)" in "teensy-2-0.md")
@@ -66,18 +42,14 @@ void keyboard_post_init_sub(void) {
     TCCR1B = 0b00001001; // set and configure fast PWM
 
     // (tied to Vcc for hardware convenience)
-    setPinInput(B4);
+    gpio_set_pin_input(B4);
 
     // unused pins - C7, D4, D5, E6
     // set as input with internal pull-up enabled
-    setPinInputHigh(C7);
-    setPinInputHigh(D4);
-    setPinInputHigh(D5);
-    setPinInputHigh(E6);
-
-    setPinOutput(ERGODOX_LED_1_PIN);
-    setPinOutput(ERGODOX_LED_2_PIN);
-    setPinOutput(ERGODOX_LED_3_PIN);
+    gpio_set_pin_input_high(C7);
+    gpio_set_pin_input_high(D4);
+    gpio_set_pin_input_high(D5);
+    gpio_set_pin_input_high(E6);
 }
 
 #ifdef RGB_MATRIX_ENABLE
